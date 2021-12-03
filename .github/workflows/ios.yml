@@ -11,8 +11,7 @@ jobs:
         node-version: 14.x
     - run: npm ci
     - name: Install pod dependencies
-        run: |
-          cd ios && pod install
+        run: cd ios && pod install
     - name: Build iOS (debug)
       run: |       
           xcodebuild -workspace project1.xcworkspace -scheme project1 archive -archivePath project1.xcarchive -allowProvisioningUpdates
