@@ -1,0 +1,24 @@
+name: iOS
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - run: npm ci
+    - name: Install pod dependencies
+        run: cd ios && pod install
+    - name: Build iOS (debug)
+      run: |       
+          xcodebuild -workspace project1.xcworkspace -scheme project1 archive -archivePath project1.xcarchive -allowProvisioningUpdates
+          xcodebuild -exportArchive -archivePath ./project1.xcarchive -exportPath . -exportOptionsPlist project1/Info.plist
+          mv project1.ipa ../project1.ipa
+    - name: Upload Artifact
+       uses: actions/upload-artifact@v2
+       with:
+         name: project1.ipa
+         path: ios/build/
